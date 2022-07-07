@@ -4,6 +4,28 @@
   "main": "index.js",
   "author": "djaciel",
   "license": "MIT",
+  "scripts": {
+    "eslint": "eslint \"**/*.{js,ts}\"",
+    "solhint": "solhint contracts/**/*.sol",
+    "lint": "yarn eslint && yarn solhint",
+    "lint:fix": "yarn eslint --fix && yarn solhint --fix",
+    "prettier": "prettier \"**/*.{ts,js,sol}\"",
+    "prettier:check": "yarn prettier --check",
+    "prettier:fix": "yarn prettier --write",
+    "compile": "hardhat compile",
+    "test": "yarn clean && yarn compile && hardhat test",
+    "typechain": "TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
+    "coverage": "hardhat coverage",
+    "flatten": "hardhat flatten",
+    "deploy": "hardhat deploy --network",
+    "docgen": "hardhat docgen",
+    "reinstall": "rm -rf node_modules/ && rm -f yarn.lock && yarn",
+    "clean": "hardhat clean",
+    "size": "hardhat size-contracts",
+    "verify": "hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input --network",
+    "start-fork": "FORK_ENABLED=true hardhat node --no-reset --no-deploy",
+    "find": "hardhat run scripts/find.ts --network"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
@@ -41,5 +63,8 @@
     "ts-node": "^10.8.2",
     "typechain": "^8.1.0",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }

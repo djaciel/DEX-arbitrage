@@ -1,16 +1,17 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 
-import { HardhatUserConfig, task } from "hardhat/config";
-import "@nomiclabs/hardhat-etherscan";
+import {HardhatUserConfig, task} from 'hardhat/config';
+import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-ethers';
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
+import '@nomiclabs/hardhat-waffle';
+import '@typechain/hardhat';
+import 'hardhat-gas-reporter';
+import 'solidity-coverage';
 import 'hardhat-contract-sizer';
 import 'hardhat-deploy';
 import 'hardhat-docgen';
 import 'hardhat-abi-exporter';
+import networks from './hardhat.network';
 
 dotenv.config();
 
@@ -29,24 +30,18 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
   solidity: "0.8.9",
-  networks: {
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    },
-  },
+  networks: networks,
   gasReporter: {
     currency: "USD",
   },
   docgen: {
     path: './docs',
     clear: true,
-    runOnCompile: true,
+    runOnCompile: false,
     except: ['./test'],
   },
   abiExporter: {
-    runOnCompile: true,
+    runOnCompile: false,
     clear: true,
     flat: true,
     only: [':Payroll$'],
