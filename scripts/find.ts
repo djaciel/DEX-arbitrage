@@ -1,17 +1,30 @@
 import axios from 'axios';
-import { getAddress } from 'ethers/lib/utils';
+import { bsc } from './tokens/bsc';
 import hre from 'hardhat';
 import { IData } from './interfaces/IPair';
 
 const func = async () => {
   async function main() {
     await hre.run('compile');
+    const token = '0xDE12c7959E1a72bbe8a5f7A1dc8f8EeF9Ab011B3';
 
-    const { data } = await axios.get<IData>(
-      'https://api.dexscreener.com/latest/dex/tokens/0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
-    );
+    const { data } = await axios.get<IData>('https://api.dexscreener.com/latest/dex/tokens/' + token);
 
-    console.log(JSON.stringify(data));
+    const { pairs } = data;
+
+    for (const pair of pairs) {
+      if (Number(pair.liquidity.usd) > 100) {
+        const msg = `
+          base: ${pair.pairAddress.symbol}
+          swap: ${pair.dexId}
+          pairAddress: ${pair.pairAddress}
+          quoteToken: ${pair.quoteToken.symbol}
+          liquidity: ${pair.liquidity.usd.toString()}
+          -------------------------------------
+        `;
+        console.log(msg);
+      }
+    }
 
     console.log(`Done!`);
 
