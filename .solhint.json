@@ -9,7 +9,8 @@
     "func-visibility": ["error", { "ignoreConstructors": true }],
     "avoid-suicide": "error",
     "avoid-low-level-calls": "off",
-    "func-name-mixedcase": "off"
+    "func-name-mixedcase": "off",
+    "var-name-mixedcase": "off"
   },
   "plugins": ["prettier"]
 }

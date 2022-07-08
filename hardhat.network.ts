@@ -10,8 +10,8 @@ const forkEnabled = process.env.FORK_ENABLED || false;
 
 const networks: HardhatUserConfig['networks'] = {
   localhost: {
-    live: false,
-    chainId: 1,
+    live: true,
+    chainId: 56,
     url: 'http://127.0.0.1:8545',
     allowUnlimitedContractSize: true,
   },
@@ -19,10 +19,10 @@ const networks: HardhatUserConfig['networks'] = {
 
 if (forkEnabled) {
   networks.hardhat = {
-    live: false,
-    chainId: 1,
+    live: true,
+    chainId: 56,
     forking: {
-      url: alchemyUrl,
+      url: 'https://speedy-nodes-nyc.moralis.io/59763aa3a28a9cb1ae270998/bsc/mainnet/archive',
     },
     accounts: {
       mnemonic,

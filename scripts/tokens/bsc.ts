@@ -1,4 +1,4 @@
-export const bsc = {
+export const bscTokens = {
   usdt: '0x55d398326f99059fF775485246999027B3197955',
   busd: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
   eth: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
