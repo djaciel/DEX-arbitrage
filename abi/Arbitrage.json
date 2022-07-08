@@ -1,0 +1,68 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "contract IUniswapV2Router02",
+            "name": "router_a",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IUniswapV2Router02",
+            "name": "router_b",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token_a",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token_b",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token_c",
+            "type": "address"
+          },
+          {
+            "internalType": "address[]",
+            "name": "path_a",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "path_b",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "path_c",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountIn",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Action",
+        "name": "action",
+        "type": "tuple"
+      }
+    ],
+    "name": "performArbitrage",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
