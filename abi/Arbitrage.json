@@ -14,6 +14,11 @@
             "type": "address"
           },
           {
+            "internalType": "contract IUniswapV2Pair",
+            "name": "pair",
+            "type": "address"
+          },
+          {
             "internalType": "address",
             "name": "token_a",
             "type": "address"
@@ -45,7 +50,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "amountIn",
+            "name": "amountToAsk",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountToPay",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
             "type": "uint256"
           }
         ],
@@ -54,7 +69,7 @@
         "type": "tuple"
       }
     ],
-    "name": "performArbitrage",
+    "name": "getAmounts",
     "outputs": [
       {
         "internalType": "uint256[]",
@@ -63,6 +78,109 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "pancakeCall",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "contract IUniswapV2Router02",
+            "name": "router_a",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IUniswapV2Router02",
+            "name": "router_b",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IUniswapV2Pair",
+            "name": "pair",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token_a",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token_b",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token_c",
+            "type": "address"
+          },
+          {
+            "internalType": "address[]",
+            "name": "path_a",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "path_b",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "path_c",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountToAsk",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountToPay",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Action",
+        "name": "_action",
+        "type": "tuple"
+      }
+    ],
+    "name": "performArbitrage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

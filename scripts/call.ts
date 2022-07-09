@@ -2,36 +2,52 @@ import hre from 'hardhat';
 import { bscSwapRouters } from './swapRouters/bsc';
 import { bscTokens } from './tokens/bsc';
 import { ActionStruct, Arbitrage } from '../typechain-types/Arbitrage';
+import { IERC20 } from '../typechain-types/interfaces/IERC20';
 
 const func = async () => {
   async function main() {
     await hre.run('compile');
 
-    const { ethers, deployments } = hre;
+    const { ethers, deployments, getNamedAccounts } = hre;
+    const richAddress = '0x8894E0a0c962CB723c1976a4421c95949bE2D4E3';
+    const {deployer} = await getNamedAccounts();
 
-    //const chainId = network.config.chainId || 0;
+    await hre.network.provider.request({
+      method: 'hardhat_impersonateAccount',
+      params: [richAddress],
+    });
 
-    const arbitrageDeployed = await deployments.get('Arbitrage');
-    console.log('arbitrageDeployed', arbitrageDeployed.address)
-    const arbitrage = await ethers.getContractAt(arbitrageDeployed.abi, arbitrageDeployed.address) as Arbitrage;
+    const richSigner = ethers.provider.getSigner(richAddress);
+    const tokenContract = await ethers.getContractAt(`IERC20`, bscTokens.usdt) as IERC20;
+    const arbitrageContract = await deployments.get('Arbitrage');
+
+    // tokenContract.connect(richSigner).transfer(arbitrageContract.address, '10000000000000000000');
+
+    console.log('Arbitrage contract: ', arbitrageContract.address)
+    const arbitrage = await ethers.getContractAt(arbitrageContract.abi, arbitrageContract.address) as Arbitrage;
+
+    console.log('deployer ETH balance: ', (await ethers.provider.getBalance(deployer)).toString());
+    console.log('arbitrageContract Token balance: ', (await tokenContract.balanceOf(arbitrageContract.address)).toString());
 
     const action: ActionStruct = {
       router_a: bscSwapRouters.pancakeswap.router,
       router_b: bscSwapRouters.apeswap.router,
+      pair: '0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae',
       token_a: bscTokens.usdt,
       token_b: bscTokens.wbnb,
       token_c: bscTokens.eth,
       path_a: [bscTokens.usdt, bscTokens.wbnb],
       path_b: [bscTokens.wbnb, bscTokens.eth],
       path_c: [bscTokens.eth, bscTokens.usdt],
-      amountIn: '1000000000000000000',
+      amountToAsk: '100000000000000000',
+      amountToPay: '100200000000000000',
+      deadline: 1720506758
     };
 
-    const values = await arbitrage.performArbitrage(action);
+    await arbitrage.performArbitrage(action);
 
-    for (const value of values) {
-      console.log('values', value.toString())
-    }
+    console.log('deployer ETH balance: ', (await ethers.provider.getBalance(deployer)).toString());
+    console.log('arbitrageContract Token balance: ', (await tokenContract.balanceOf(arbitrageContract.address)).toString());
 
     console.log(`Done!`);
 

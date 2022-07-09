@@ -7,6 +7,9 @@ import type {
   BigNumberish,
   BytesLike,
   CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -24,13 +27,16 @@ import type {
 export type ActionStruct = {
   router_a: PromiseOrValue<string>;
   router_b: PromiseOrValue<string>;
+  pair: PromiseOrValue<string>;
   token_a: PromiseOrValue<string>;
   token_b: PromiseOrValue<string>;
   token_c: PromiseOrValue<string>;
   path_a: PromiseOrValue<string>[];
   path_b: PromiseOrValue<string>[];
   path_c: PromiseOrValue<string>[];
-  amountIn: PromiseOrValue<BigNumberish>;
+  amountToAsk: PromiseOrValue<BigNumberish>;
+  amountToPay: PromiseOrValue<BigNumberish>;
+  deadline: PromiseOrValue<BigNumberish>;
 };
 
 export type ActionStructOutput = [
@@ -39,34 +45,62 @@ export type ActionStructOutput = [
   string,
   string,
   string,
+  string,
   string[],
   string[],
   string[],
+  BigNumber,
+  BigNumber,
   BigNumber
 ] & {
   router_a: string;
   router_b: string;
+  pair: string;
   token_a: string;
   token_b: string;
   token_c: string;
   path_a: string[];
   path_b: string[];
   path_c: string[];
-  amountIn: BigNumber;
+  amountToAsk: BigNumber;
+  amountToPay: BigNumber;
+  deadline: BigNumber;
 };
 
 export interface ArbitrageInterface extends utils.Interface {
   functions: {
-    "performArbitrage((address,address,address,address,address,address[],address[],address[],uint256))": FunctionFragment;
+    "getAmounts((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256))": FunctionFragment;
+    "pancakeCall(address,uint256,uint256,bytes)": FunctionFragment;
+    "performArbitrage((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256))": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "performArbitrage"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "getAmounts" | "pancakeCall" | "performArbitrage"
+  ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "getAmounts",
+    values: [ActionStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "pancakeCall",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "performArbitrage",
     values: [ActionStruct]
   ): string;
 
+  decodeFunctionResult(functionFragment: "getAmounts", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pancakeCall",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "performArbitrage",
     data: BytesLike
@@ -102,37 +136,102 @@ export interface Arbitrage extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    performArbitrage(
+    getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
+
+    pancakeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    performArbitrage(
+      _action: ActionStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  performArbitrage(
+  getAmounts(
     action: ActionStruct,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
+  pancakeCall(
+    sender: PromiseOrValue<string>,
+    amount0: PromiseOrValue<BigNumberish>,
+    amount1: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  performArbitrage(
+    _action: ActionStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
-    performArbitrage(
+    getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    pancakeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    performArbitrage(
+      _action: ActionStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    performArbitrage(
+    getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    pancakeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    performArbitrage(
+      _action: ActionStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    performArbitrage(
+    getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    pancakeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    performArbitrage(
+      _action: ActionStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }
