@@ -43,7 +43,13 @@ contract Arbitrage {
 
         Action memory action = abi.decode(data, (Action));
 
+        performSwap(action);
+
         IERC20(action.token_a).transfer(msg.sender, action.amountToPay);
+    }
+
+    function performSwap(Action memory action) internal {
+        
     }
 
     function getAmounts(Action calldata action) external view returns (uint256[] memory) {
