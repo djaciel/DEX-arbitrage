@@ -2,6 +2,52 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "apeCall",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "tokens",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address",
+        "name": "router",
+        "type": "address"
+      }
+    ],
+    "name": "approveTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "contract IUniswapV2Router02",
@@ -50,7 +96,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "amountToAsk",
+            "name": "amountToken_a",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountToken_b",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountToken_c",
             "type": "uint256"
           },
           {
@@ -159,7 +215,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "amountToAsk",
+            "name": "amountToken_a",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountToken_b",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountToken_c",
             "type": "uint256"
           },
           {

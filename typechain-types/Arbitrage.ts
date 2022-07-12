@@ -34,7 +34,9 @@ export type ActionStruct = {
   path_a: PromiseOrValue<string>[];
   path_b: PromiseOrValue<string>[];
   path_c: PromiseOrValue<string>[];
-  amountToAsk: PromiseOrValue<BigNumberish>;
+  amountToken_a: PromiseOrValue<BigNumberish>;
+  amountToken_b: PromiseOrValue<BigNumberish>;
+  amountToken_c: PromiseOrValue<BigNumberish>;
   amountToPay: PromiseOrValue<BigNumberish>;
   deadline: PromiseOrValue<BigNumberish>;
 };
@@ -51,6 +53,8 @@ export type ActionStructOutput = [
   string[],
   BigNumber,
   BigNumber,
+  BigNumber,
+  BigNumber,
   BigNumber
 ] & {
   router_a: string;
@@ -62,22 +66,44 @@ export type ActionStructOutput = [
   path_a: string[];
   path_b: string[];
   path_c: string[];
-  amountToAsk: BigNumber;
+  amountToken_a: BigNumber;
+  amountToken_b: BigNumber;
+  amountToken_c: BigNumber;
   amountToPay: BigNumber;
   deadline: BigNumber;
 };
 
 export interface ArbitrageInterface extends utils.Interface {
   functions: {
-    "getAmounts((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256))": FunctionFragment;
+    "apeCall(address,uint256,uint256,bytes)": FunctionFragment;
+    "approveTokens(address[],address)": FunctionFragment;
+    "getAmounts((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
     "pancakeCall(address,uint256,uint256,bytes)": FunctionFragment;
-    "performArbitrage((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256))": FunctionFragment;
+    "performArbitrage((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "getAmounts" | "pancakeCall" | "performArbitrage"
+    nameOrSignatureOrTopic:
+      | "apeCall"
+      | "approveTokens"
+      | "getAmounts"
+      | "pancakeCall"
+      | "performArbitrage"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "apeCall",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approveTokens",
+    values: [PromiseOrValue<string>[], PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "getAmounts",
     values: [ActionStruct]
@@ -96,6 +122,11 @@ export interface ArbitrageInterface extends utils.Interface {
     values: [ActionStruct]
   ): string;
 
+  decodeFunctionResult(functionFragment: "apeCall", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "approveTokens",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getAmounts", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pancakeCall",
@@ -136,6 +167,20 @@ export interface Arbitrage extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    apeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    approveTokens(
+      tokens: PromiseOrValue<string>[],
+      router: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides
@@ -154,6 +199,20 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  apeCall(
+    sender: PromiseOrValue<string>,
+    amount0: PromiseOrValue<BigNumberish>,
+    amount1: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  approveTokens(
+    tokens: PromiseOrValue<string>[],
+    router: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   getAmounts(
     action: ActionStruct,
@@ -174,6 +233,20 @@ export interface Arbitrage extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    apeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    approveTokens(
+      tokens: PromiseOrValue<string>[],
+      router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides
@@ -196,6 +269,20 @@ export interface Arbitrage extends BaseContract {
   filters: {};
 
   estimateGas: {
+    apeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    approveTokens(
+      tokens: PromiseOrValue<string>[],
+      router: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides
@@ -216,6 +303,20 @@ export interface Arbitrage extends BaseContract {
   };
 
   populateTransaction: {
+    apeCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    approveTokens(
+      tokens: PromiseOrValue<string>[],
+      router: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     getAmounts(
       action: ActionStruct,
       overrides?: CallOverrides

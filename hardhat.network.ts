@@ -22,7 +22,7 @@ if (forkEnabled) {
     live: true,
     chainId: 56,
     forking: {
-      url: 'https://speedy-nodes-nyc.moralis.io/59763aa3a28a9cb1ae270998/bsc/mainnet/archive',
+      url: 'https://bsc-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3',
     },
     accounts: {
       mnemonic,
