@@ -95,6 +95,27 @@ if (mnemonic) {
     },
     tags: ['staging'],
   };
+
+  networks.fantom = {
+    live: true,
+    chainId: 250,
+    url: 'https://rpc3.fantom.network',
+    accounts: {
+      mnemonic,
+    },
+    tags: ['prod'],
+  };
+
+  networks.harmony = {
+    live: true,
+    chainId: 1666600000,
+    url: 'https://s2.api.harmony.one',
+    accounts: {
+      mnemonic,
+    },
+    tags: ['prod'],
+  };
+  
 }
 
 if (infuraApiKey && mnemonic) {
