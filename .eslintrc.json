@@ -5,6 +5,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
+  "include": ["data/**/*"],
   "extends": [
     "eslint:recommended",
     "prettier",

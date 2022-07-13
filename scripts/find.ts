@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { bsc } from './tokens/bsc';
 import hre from 'hardhat';
 import { IData } from './interfaces/IPair';
 
@@ -15,7 +14,7 @@ const func = async () => {
     for (const pair of pairs) {
       if (Number(pair.liquidity.usd) > 100) {
         const msg = `
-          base: ${pair.pairAddress.symbol}
+          base: ${pair.baseToken.symbol}
           swap: ${pair.dexId}
           pairAddress: ${pair.pairAddress}
           quoteToken: ${pair.quoteToken.symbol}

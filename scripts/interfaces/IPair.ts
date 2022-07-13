@@ -5,7 +5,8 @@ export interface IData {
 export interface IPair {
   chainId: string;
   dexId: string;
-  pairAddress: IBaseToken;
+  pairAddress: string;
+  baseToken: IBaseToken;
   quoteToken: IQuoteToken;
   priceNative: string;
   priceUsd: string;
@@ -24,4 +25,11 @@ export interface IQuoteToken {
 
 export interface Iliquidity {
   usd: string;
+}
+
+export interface ISimplePair {
+  dexId: string;
+  pairAddress: string;
+  liquidity: string;
+  pair: string[];
 }
