@@ -17,7 +17,7 @@ const getData = async (params: string) => {
       dexId: pair.dexId,
       liquidity: pair.liquidity.usd,
       pairAddress: pair.pairAddress,
-      pair: [pair.baseToken.symbol, pair.quoteToken.symbol],
+      pair: [`${pair.baseToken.symbol}-${pair.dexId}`, `${pair.quoteToken.symbol}-${pair.dexId}`],
     });
   }
 

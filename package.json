@@ -26,7 +26,9 @@
     "start-fork": "FORK_ENABLED=true hardhat node --no-reset --no-deploy",
     "find": "hardhat run scripts/find.ts --network",
     "call": "hardhat run scripts/call.ts --network",
-    "getPairsData": "hardhat run scripts/getPairsData.ts --network"
+    "getPairsData": "hardhat run scripts/getPairsData.ts --network",
+    "getPairsPaths": "hardhat run scripts/getPairsPaths.ts --network",
+    "getTokensAddress": "hardhat run scripts/getTokensAddress.ts --network"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",

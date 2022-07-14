@@ -11,7 +11,7 @@ const forkEnabled = process.env.FORK_ENABLED || false;
 const networks: HardhatUserConfig['networks'] = {
   localhost: {
     live: true,
-    chainId: 56,
+    chainId: 250,
     url: 'http://127.0.0.1:8545',
     allowUnlimitedContractSize: true,
   },
@@ -20,9 +20,9 @@ const networks: HardhatUserConfig['networks'] = {
 if (forkEnabled) {
   networks.hardhat = {
     live: true,
-    chainId: 56,
+    chainId: 250,
     forking: {
-      url: 'https://bsc-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3',
+      url: 'https://rpc.ankr.com/fantom',
     },
     accounts: {
       mnemonic,
@@ -99,7 +99,7 @@ if (mnemonic) {
   networks.fantom = {
     live: true,
     chainId: 250,
-    url: 'https://rpc3.fantom.network',
+    url: 'https://rpc.ankr.com/fantom',
     accounts: {
       mnemonic,
     },
