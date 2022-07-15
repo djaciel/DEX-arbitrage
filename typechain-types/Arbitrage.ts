@@ -24,6 +24,31 @@ import type {
   PromiseOrValue,
 } from "./common";
 
+export type ActionQuoteStruct = {
+  router_a: PromiseOrValue<string>;
+  router_b: PromiseOrValue<string>;
+  path_a: PromiseOrValue<string>[];
+  path_b: PromiseOrValue<string>[];
+  path_c: PromiseOrValue<string>[];
+  amountToken_a: PromiseOrValue<BigNumberish>;
+};
+
+export type ActionQuoteStructOutput = [
+  string,
+  string,
+  string[],
+  string[],
+  string[],
+  BigNumber
+] & {
+  router_a: string;
+  router_b: string;
+  path_a: string[];
+  path_b: string[];
+  path_c: string[];
+  amountToken_a: BigNumber;
+};
+
 export type ActionStruct = {
   router_a: PromiseOrValue<string>;
   router_b: PromiseOrValue<string>;
@@ -77,7 +102,7 @@ export interface ArbitrageInterface extends utils.Interface {
   functions: {
     "apeCall(address,uint256,uint256,bytes)": FunctionFragment;
     "approveTokens(address[],address)": FunctionFragment;
-    "getAmounts((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
+    "getAmounts((address,address,address[],address[],address[],uint256))": FunctionFragment;
     "pancakeCall(address,uint256,uint256,bytes)": FunctionFragment;
     "performArbitrage((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
   };
@@ -106,7 +131,7 @@ export interface ArbitrageInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getAmounts",
-    values: [ActionStruct]
+    values: [ActionQuoteStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "pancakeCall",
@@ -182,7 +207,7 @@ export interface Arbitrage extends BaseContract {
     ): Promise<ContractTransaction>;
 
     getAmounts(
-      action: ActionStruct,
+      actionQuote: ActionQuoteStruct,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
@@ -215,7 +240,7 @@ export interface Arbitrage extends BaseContract {
   ): Promise<ContractTransaction>;
 
   getAmounts(
-    action: ActionStruct,
+    actionQuote: ActionQuoteStruct,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
@@ -248,7 +273,7 @@ export interface Arbitrage extends BaseContract {
     ): Promise<void>;
 
     getAmounts(
-      action: ActionStruct,
+      actionQuote: ActionQuoteStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
@@ -284,7 +309,7 @@ export interface Arbitrage extends BaseContract {
     ): Promise<BigNumber>;
 
     getAmounts(
-      action: ActionStruct,
+      actionQuote: ActionQuoteStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -318,7 +343,7 @@ export interface Arbitrage extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getAmounts(
-      action: ActionStruct,
+      actionQuote: ActionQuoteStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

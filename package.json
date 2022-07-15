@@ -28,7 +28,9 @@
     "call": "hardhat run scripts/call.ts --network",
     "getPairsData": "hardhat run scripts/getPairsData.ts --network",
     "getPairsPaths": "hardhat run scripts/getPairsPaths.ts --network",
-    "getTokensAddress": "hardhat run scripts/getTokensAddress.ts --network"
+    "getTokensAddress": "hardhat run scripts/getTokensAddress.ts --network",
+    "performArbitrage": "hardhat run scripts/performArbitrage.ts --network",
+    "exampleScript": "hardhat run scripts/exampleScript.ts --network"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",

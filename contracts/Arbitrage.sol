@@ -23,6 +23,15 @@ struct Action {
     uint256 deadline;
 }
 
+struct ActionQuote {
+    IUniswapV2Router02 router_a;
+    IUniswapV2Router02 router_b;
+    address[] path_a;
+    address[] path_b;
+    address[] path_c;
+    uint256 amountToken_a;
+}
+
 contract Arbitrage {
     function performArbitrage(Action calldata _action) external {
         address token0 = _action.pair.token0();
@@ -70,7 +79,15 @@ contract Arbitrage {
     }
 
     function performSwap(Action memory action) internal returns (uint256) {
-        uint256[] memory amountOutValues = getAmounts(action);
+        ActionQuote memory actionQuote = ActionQuote(
+            action.router_a,
+            action.router_b,
+            action.path_a,
+            action.path_b,
+            action.path_c,
+            action.amountToken_a
+        );
+        uint256[] memory amountOutValues = getAmounts(actionQuote);
 
         action.router_a.swapTokensForExactTokens(
             amountOutValues[0],
@@ -88,21 +105,22 @@ contract Arbitrage {
             action.deadline
         );
 
-        return action.router_a.swapTokensForExactTokens(
-            amountOutValues[2],
-            action.amountToken_c,
-            action.path_c,
-            address(this),
-            action.deadline
-        )[1];
+        return
+            action.router_a.swapTokensForExactTokens(
+                amountOutValues[2],
+                action.amountToken_c,
+                action.path_c,
+                address(this),
+                action.deadline
+            )[1];
     }
 
-    function getAmounts(Action memory action) public view returns (uint256[] memory) {
+    function getAmounts(ActionQuote memory actionQuote) public view returns (uint256[] memory) {
         uint256[] memory values = new uint256[](3);
 
-        values[0] = action.router_a.getAmountsOut(action.amountToken_a, action.path_a)[1];
-        values[1] = action.router_b.getAmountsOut(values[0], action.path_b)[1];
-        values[2] = action.router_a.getAmountsOut(values[1], action.path_c)[1];
+        values[0] = actionQuote.router_a.getAmountsOut(actionQuote.amountToken_a, actionQuote.path_a)[1];
+        values[1] = actionQuote.router_b.getAmountsOut(values[0], actionQuote.path_b)[1];
+        values[2] = actionQuote.router_a.getAmountsOut(values[1], actionQuote.path_c)[1];
 
         return values;
     }
