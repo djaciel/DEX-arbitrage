@@ -1,7 +1,5 @@
 import hre, { deployments, ethers } from 'hardhat';
-import { paths } from '../data/paths';
-import { tokens } from '../data/tokens';
-import { routers } from '../data/routers';
+import { paths, routers, tokens } from '../data/fantom';
 import { ActionQuoteStruct, ActionStruct, Arbitrage } from '../typechain-types/Arbitrage';
 import { IERC20 } from '../typechain-types/interfaces/IERC20';
 import { IUniswapV2Router02 } from '../typechain-types/interfaces/IUniswapV2Router02';

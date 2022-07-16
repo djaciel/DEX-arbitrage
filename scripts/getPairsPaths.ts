@@ -1,6 +1,6 @@
 import axios from 'axios';
 import hre from 'hardhat';
-import { fantomPairData } from '../data/pairs/fantomData';
+import { pairsData } from '../data/fantom';
 
 function extractUniqueElements(arr: any) {
   let res: any = [];
@@ -76,7 +76,7 @@ const func = async () => {
   async function main() {
     await hre.run('compile');
 
-    const pairs = fantomPairData.map((x) => x.pair)
+    const pairs = pairsData.map((x) => x.pair)
 
     const paths = buildTree(pairs)
 

@@ -2,7 +2,7 @@ import hre, { ethers } from 'hardhat';
 import { bscSwapRouters } from './swapRouters/bsc';
 import { IUniswapV2Router02 } from '../typechain-types/interfaces/IUniswapV2Router02';
 import { IUniswapV2Pair } from '../typechain-types/interfaces/IUniswapV2Pair';
-import { fantomPairData } from '../data/pairs/fantomData';
+import { pairsData } from '../data/fantom';
 import { IToken } from './interfaces/IToken';
 import { IERC20 } from '../typechain-types/interfaces/IERC20';
 
@@ -13,7 +13,7 @@ const func = async () => {
     const tokens: IToken[] = [];
     const tokensAddress: string[] = [];
 
-    for (const pair of fantomPairData) {
+    for (const pair of pairsData) {
       console.log('reading pairs')
       const pairContract = (await ethers.getContractAt(`IUniswapV2Pair`, pair.pairAddress)) as IUniswapV2Pair;
       tokensAddress.push(await pairContract.token0());

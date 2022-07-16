@@ -1,6 +1,6 @@
 import axios from 'axios';
 import hre from 'hardhat';
-import { fantomPairs } from '../data/pairs/fantom';
+import { pairs } from '../data/fantom';
 import { IData, ISimplePair } from './interfaces/IPair';
 
 const apiUrl = 'https://api.dexscreener.com/latest/dex/pairs/fantom/';
@@ -31,11 +31,11 @@ const func = async () => {
     let params = '';
     let pairsFound: ISimplePair[] = [];
 
-    for (let i = 0; i < fantomPairs.length; i++) {
-      params += fantomPairs[i] + ',';
+    for (let i = 0; i < pairs.length; i++) {
+      params += pairs[i] + ',';
 
       if (i % 25 === 0) {
-        params += fantomPairs[i];
+        params += pairs[i];
         const pairsGot = await getData(params);
         pairsFound = [...pairsFound, ...pairsGot];
         params = '';
