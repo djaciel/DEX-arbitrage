@@ -29,10 +29,10 @@ const func = async () => {
 
       let amountToAsk;
       if (usdcAddress === token_a) {
-        amountToAsk = ethers.BigNumber.from('500000');
+        amountToAsk = ethers.BigNumber.from('500');
       } else {
         try {
-          amountToAsk = (await routerContract.getAmountsOut('500000', [usdcAddress, token_a]))[1];
+          amountToAsk = (await routerContract.getAmountsOut('90', [usdcAddress, token_a]))[1];
         } catch (error) {
           console.log('error in getAmountsOut', [usdcAddress, token_a]);
           continue;

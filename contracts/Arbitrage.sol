@@ -1,38 +1,44 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+pragma abicoder v2;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IUniswapV2Router02.sol";
 import "./interfaces/IUniswapV2Pair.sol";
 import "./interfaces/IERC20.sol";
 import "hardhat/console.sol";
 
-struct Action {
-    IUniswapV2Router02 router_a;
-    IUniswapV2Router02 router_b;
-    IUniswapV2Pair pair;
-    address token_a;
-    address token_b;
-    address token_c;
-    address[] path_a;
-    address[] path_b;
-    address[] path_c;
-    uint256 amountToken_a;
-    uint256 amountToken_b;
-    uint256 amountToken_c;
-    uint256 amountToPay;
-    uint256 deadline;
-}
+contract Arbitrage is Ownable {
+    struct Action {
+        IUniswapV2Router02 router_a;
+        IUniswapV2Router02 router_b;
+        IUniswapV2Pair pair;
+        address token_a;
+        address token_b;
+        address token_c;
+        address[] path_a;
+        address[] path_b;
+        address[] path_c;
+        uint256 amountToken_a;
+        uint256 amountToken_b;
+        uint256 amountToken_c;
+        uint256 amountToPay;
+        uint256 deadline;
+    }
 
-struct ActionQuote {
-    IUniswapV2Router02 router_a;
-    IUniswapV2Router02 router_b;
-    address[] path_a;
-    address[] path_b;
-    address[] path_c;
-    uint256 amountToken_a;
-}
+    struct ActionQuote {
+        IUniswapV2Router02 router_a;
+        IUniswapV2Router02 router_b;
+        address[] path_a;
+        address[] path_b;
+        address[] path_c;
+        uint256 amountToken_a;
+    }
 
-contract Arbitrage {
+    function withdrawal(address token) external onlyOwner {
+        IERC20(token).transfer(msg.sender, IERC20(token).balanceOf(address(this)));
+    }
+
     function performArbitrage(Action calldata _action) external {
         address token0 = _action.pair.token0();
         bytes memory action = abi.encode(_action);
@@ -125,12 +131,9 @@ contract Arbitrage {
         return values;
     }
 
-    function approveTokens(address[] calldata tokens, address router) external {
+    function approveTokens(address[] calldata tokens, address router) external onlyOwner {
         for (uint256 i = 0; i < tokens.length; i++) {
             IERC20(tokens[i]).approve(router, type(uint256).max);
         }
     }
 }
-
-// pair address
-// amount0, amount1
