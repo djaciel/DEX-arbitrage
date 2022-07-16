@@ -1,14 +1,13 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   async function main() {
+    const { deployments, getNamedAccounts } = hre;
 
-    const {deployments, getNamedAccounts} = hre;
+    const { deploy } = deployments;
 
-    const {deploy} = deployments;
-
-    const {deployer} = await getNamedAccounts();
+    const { deployer } = await getNamedAccounts();
 
     await deploy('Arbitrage', {
       from: deployer,

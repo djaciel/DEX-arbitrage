@@ -26,11 +26,7 @@ const func = async () => {
 
     if ((await tokenContract.balanceOf(arbitrageContract.address)).isZero()) {
       await tokenContract.connect(richSigner).transfer(arbitrageContract.address, '10000000000000000000');
-      const tokens = [
-        bscTokens.usdt,
-        bscTokens.wbnb,
-        bscTokens.eth,
-      ];
+      const tokens = [bscTokens.usdt, bscTokens.wbnb, bscTokens.eth];
       await arbitrage.approveTokens(tokens, bscSwapRouters.pancakeswap.router);
       await arbitrage.approveTokens(tokens, bscSwapRouters.apeswap.router);
       return;
@@ -60,12 +56,12 @@ const func = async () => {
     };
 
     const values = await arbitrage.getAmounts(action);
-    const number = ethers.BigNumber.from(ethers.utils.parseUnits('1.0',2).toString()).toString()
+    const number = ethers.BigNumber.from(ethers.utils.parseUnits('1.0', 2).toString()).toString();
 
     const amT_a = values[0].mul(number).toString();
     const amT_b = values[1].mul(number).toString();
     const amT_c = values[2].mul(number).toString();
-    console.log(amT_a, amT_b, amT_c)
+    console.log(amT_a, amT_b, amT_c);
 
     action.amountToken_a = amT_a;
     action.amountToken_b = amT_b;

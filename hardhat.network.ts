@@ -115,7 +115,6 @@ if (mnemonic) {
     },
     tags: ['prod'],
   };
-  
 }
 
 if (infuraApiKey && mnemonic) {

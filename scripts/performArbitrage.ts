@@ -1,7 +1,6 @@
 import hre, { deployments, ethers } from 'hardhat';
 import { paths, routers, tokens } from '../data/fantom';
-import { ActionQuoteStruct, ActionStruct, Arbitrage } from '../typechain-types/Arbitrage';
-import { IERC20 } from '../typechain-types/interfaces/IERC20';
+import { ActionQuoteStruct, Arbitrage } from '../typechain-types/Arbitrage';
 import { IUniswapV2Router02 } from '../typechain-types/interfaces/IUniswapV2Router02';
 
 const func = async () => {

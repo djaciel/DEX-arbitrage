@@ -403,4 +403,4 @@ export const tokens = {
     address: '0x13082681E8CE9bd0aF505912d306403592490Fc7',
     decimals: 18,
   },
-}
+};

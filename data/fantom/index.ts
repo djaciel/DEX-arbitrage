@@ -5,11 +5,4 @@ import { singlePaths } from './singlePaths';
 import { routers } from './routers';
 import { tokens } from './tokens';
 
-export {
-  pairs,
-  pairsData,
-  paths,
-  singlePaths,
-  routers,
-  tokens,
-};
+export { pairs, pairsData, paths, singlePaths, routers, tokens };
