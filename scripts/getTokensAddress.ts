@@ -30,7 +30,16 @@ const func = async () => {
       });
     }
 
-    console.log('tokens', JSON.stringify(tokens));
+    const tokensObj = {};
+
+    for (const token of tokens) {
+      tokensObj[token.symbol] = {
+        address: token.address,
+        decimals: token.decimals,
+      };
+    }
+
+    console.log('tokens', JSON.stringify(tokensObj));
 
     console.log(`Done!`);
 
