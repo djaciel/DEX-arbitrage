@@ -20,8 +20,6 @@ contract Arbitrage is Ownable {
         address[] path_b;
         address[] path_c;
         uint256 amountToken_a;
-        uint256 amountToken_b;
-        uint256 amountToken_c;
         uint256 amountToPay;
         uint256 deadline;
     }
@@ -34,6 +32,9 @@ contract Arbitrage is Ownable {
         address[] path_c;
         uint256 amountToken_a;
     }
+
+    event Quote(uint256[] amounts);
+    event Swap(address[] tokens, uint256[] amounts);
 
     function withdrawal(address token) external onlyOwner {
         IERC20(token).transfer(msg.sender, IERC20(token).balanceOf(address(this)));
@@ -50,21 +51,14 @@ contract Arbitrage is Ownable {
         }
     }
 
-    function apeCall(
+    function uniswapV2Call(
         address sender,
         uint256 amount0,
         uint256 amount1,
         bytes calldata data
     ) external payable {
         assert(amount0 == 0 || amount1 == 0);
-
-        Action memory action = abi.decode(data, (Action));
-
-        uint256 amountReceived_a = performSwap(action);
-
-        //require(amountReceived_a > action.amountToPay, "not enough");
-
-        IERC20(action.token_a).transfer(msg.sender, action.amountToPay);
+        performSwap(data);
     }
 
     function pancakeCall(
@@ -74,17 +68,12 @@ contract Arbitrage is Ownable {
         bytes calldata data
     ) external payable {
         assert(amount0 == 0 || amount1 == 0);
-
-        Action memory action = abi.decode(data, (Action));
-
-        uint256 amountReceived_a = performSwap(action);
-
-        //require(amountReceived_a > action.amountToPay, "not enough");
-
-        IERC20(action.token_a).transfer(msg.sender, action.amountToPay);
+        performSwap(data);
     }
 
-    function performSwap(Action memory action) internal returns (uint256) {
+    function performSwap(bytes calldata data) internal returns (uint256) {
+        Action memory action = abi.decode(data, (Action));
+
         ActionQuote memory actionQuote = ActionQuote(
             action.router_a,
             action.router_b,
@@ -94,8 +83,9 @@ contract Arbitrage is Ownable {
             action.amountToken_a
         );
         uint256[] memory amountOutValues = getAmounts(actionQuote);
+        uint256[] memory swapResponse;
 
-        action.router_a.swapTokensForExactTokens(
+        swapResponse = action.router_a.swapTokensForExactTokens(
             amountOutValues[0],
             action.amountToken_a,
             action.path_a,
@@ -103,22 +93,33 @@ contract Arbitrage is Ownable {
             action.deadline
         );
 
-        action.router_b.swapTokensForExactTokens(
+        emit Swap(action.path_a, swapResponse);
+
+        swapResponse = action.router_b.swapTokensForExactTokens(
             amountOutValues[1],
-            action.amountToken_b,
+            amountOutValues[0],
             action.path_b,
             address(this),
             action.deadline
         );
 
-        return
-            action.router_a.swapTokensForExactTokens(
-                amountOutValues[2],
-                action.amountToken_c,
-                action.path_c,
-                address(this),
-                action.deadline
-            )[1];
+        emit Swap(action.path_b, swapResponse);
+
+        swapResponse = action.router_a.swapTokensForExactTokens(
+            amountOutValues[2],
+            amountOutValues[1],
+            action.path_c,
+            address(this),
+            action.deadline
+        );
+
+        emit Swap(action.path_c, swapResponse);
+
+        require(swapResponse[1] > action.amountToPay, "not enough");
+
+        IERC20(action.token_a).transfer(msg.sender, action.amountToPay);
+
+        return swapResponse[1];
     }
 
     function getAmounts(ActionQuote memory actionQuote) public view returns (uint256[] memory) {

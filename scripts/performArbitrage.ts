@@ -1,7 +1,7 @@
 import hre, { deployments, ethers } from 'hardhat';
 import { paths, routers, tokens } from '../data/fantom';
-import { ActionQuoteStruct, Arbitrage } from '../typechain-types/Arbitrage';
-import { IUniswapV2Router02 } from '../typechain-types/interfaces/IUniswapV2Router02';
+import { Arbitrage } from '../typechain-types/contracts/Arbitrage';
+import { IUniswapV2Router02 } from '../typechain-types/contracts/interfaces/IUniswapV2Router02';
 
 const func = async () => {
   async function main() {
@@ -39,7 +39,7 @@ const func = async () => {
         }
       }
 
-      const actionQuote: ActionQuoteStruct = {
+      const actionQuote: Arbitrage.ActionQuoteStruct = {
         amountToken_a: amountToAsk.toString(),
         path_a: path_a,
         path_b: path_b,
@@ -85,54 +85,3 @@ const func = async () => {
 };
 
 func();
-
-// const { ethers, deployments, getNamedAccounts } = hre;
-//     const { deployer } = await getNamedAccounts();
-
-//     const tokenContract = (await ethers.getContractAt(`IERC20`, bscTokens.usdt)) as IERC20;
-//     const arbitrageContract = await deployments.get('Arbitrage');
-
-//     const arbitrage = (await ethers.getContractAt(arbitrageContract.abi, arbitrageContract.address)) as Arbitrage;
-
-//     // console.log('deployer ETH balance: ', (await ethers.provider.getBalance(deployer)).toString());
-//     // console.log(
-//     //   'arbitrageContract Token balance: ',
-//     //   (await tokenContract.balanceOf(arbitrageContract.address)).toString()
-//     // );
-
-//     // // const action: ActionStruct = {
-//     // //   router_a: bscSwapRouters.pancakeswap.router,
-//     // //   router_b: bscSwapRouters.apeswap.router,
-//     // //   pair: '0x83c5b5b309ee8e232fe9db217d394e262a71bcc0',
-//     // //   token_a: bscTokens.usdt,
-//     // //   token_b: bscTokens.wbnb,
-//     // //   token_c: bscTokens.eth,
-//     // //   path_a: [bscTokens.usdt, bscTokens.wbnb],
-//     // //   path_b: [bscTokens.wbnb, bscTokens.eth],
-//     // //   path_c: [bscTokens.eth, bscTokens.usdt],
-//     // //   amountToken_a: '1000000000000000000',
-//     // //   amountToken_b: '0',
-//     // //   amountToken_c: '0',
-//     // //   amountToPay: '2000000000000000000',
-//     // //   deadline: 1720506758,
-//     // // };
-
-//     const values = await arbitrage.getAmounts(action);
-//     const number = ethers.BigNumber.from(ethers.utils.parseUnits('1.0',2).toString()).toString()
-
-//     const amT_a = values[0].mul(number).toString();
-//     const amT_b = values[1].mul(number).toString();
-//     const amT_c = values[2].mul(number).toString();
-//     console.log(amT_a, amT_b, amT_c)
-
-//     action.amountToken_a = amT_a;
-//     action.amountToken_b = amT_b;
-//     action.amountToken_c = amT_c;
-
-//     await arbitrage.performArbitrage(action);
-
-//     console.log('deployer ETH balance: ', (await ethers.provider.getBalance(deployer)).toString());
-//     console.log(
-//       'arbitrageContract Token balance: ',
-//       (await tokenContract.balanceOf(arbitrageContract.address)).toString()
-//     );

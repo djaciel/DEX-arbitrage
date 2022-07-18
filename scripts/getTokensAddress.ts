@@ -1,8 +1,8 @@
 import hre, { ethers } from 'hardhat';
-import { IUniswapV2Pair } from '../typechain-types/interfaces/IUniswapV2Pair';
+import { IUniswapV2Pair } from '../typechain-types/contracts/interfaces/IUniswapV2Pair';
 import { pairsData } from '../data/fantom';
 import { IToken } from './interfaces/IToken';
-import { IERC20 } from '../typechain-types/interfaces/IERC20';
+import { IERC20 } from '../typechain-types/contracts/interfaces/IERC20';
 
 const func = async () => {
   async function main() {

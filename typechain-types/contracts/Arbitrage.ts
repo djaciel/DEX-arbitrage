@@ -65,8 +65,6 @@ export declare namespace Arbitrage {
     path_b: PromiseOrValue<string>[];
     path_c: PromiseOrValue<string>[];
     amountToken_a: PromiseOrValue<BigNumberish>;
-    amountToken_b: PromiseOrValue<BigNumberish>;
-    amountToken_c: PromiseOrValue<BigNumberish>;
     amountToPay: PromiseOrValue<BigNumberish>;
     deadline: PromiseOrValue<BigNumberish>;
   };
@@ -83,8 +81,6 @@ export declare namespace Arbitrage {
     string[],
     BigNumber,
     BigNumber,
-    BigNumber,
-    BigNumber,
     BigNumber
   ] & {
     router_a: string;
@@ -97,8 +93,6 @@ export declare namespace Arbitrage {
     path_b: string[];
     path_c: string[];
     amountToken_a: BigNumber;
-    amountToken_b: BigNumber;
-    amountToken_c: BigNumber;
     amountToPay: BigNumber;
     deadline: BigNumber;
   };
@@ -106,20 +100,19 @@ export declare namespace Arbitrage {
 
 export interface ArbitrageInterface extends utils.Interface {
   functions: {
-    "apeCall(address,uint256,uint256,bytes)": FunctionFragment;
     "approveTokens(address[],address)": FunctionFragment;
     "getAmounts((address,address,address[],address[],address[],uint256))": FunctionFragment;
     "owner()": FunctionFragment;
     "pancakeCall(address,uint256,uint256,bytes)": FunctionFragment;
-    "performArbitrage((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
+    "performArbitrage((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256))": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "uniswapV2Call(address,uint256,uint256,bytes)": FunctionFragment;
     "withdrawal(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "apeCall"
       | "approveTokens"
       | "getAmounts"
       | "owner"
@@ -127,18 +120,10 @@ export interface ArbitrageInterface extends utils.Interface {
       | "performArbitrage"
       | "renounceOwnership"
       | "transferOwnership"
+      | "uniswapV2Call"
       | "withdrawal"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "apeCall",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
   encodeFunctionData(
     functionFragment: "approveTokens",
     values: [PromiseOrValue<string>[], PromiseOrValue<string>]
@@ -170,11 +155,19 @@ export interface ArbitrageInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "uniswapV2Call",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawal",
     values: [PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "apeCall", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "approveTokens",
     data: BytesLike
@@ -197,13 +190,21 @@ export interface ArbitrageInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "uniswapV2Call",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "withdrawal", data: BytesLike): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
+    "Quote(uint256[])": EventFragment;
+    "Swap(address[],uint256[])": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Quote"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Swap"): EventFragment;
 }
 
 export interface OwnershipTransferredEventObject {
@@ -217,6 +218,21 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface QuoteEventObject {
+  amounts: BigNumber[];
+}
+export type QuoteEvent = TypedEvent<[BigNumber[]], QuoteEventObject>;
+
+export type QuoteEventFilter = TypedEventFilter<QuoteEvent>;
+
+export interface SwapEventObject {
+  tokens: string[];
+  amounts: BigNumber[];
+}
+export type SwapEvent = TypedEvent<[string[], BigNumber[]], SwapEventObject>;
+
+export type SwapEventFilter = TypedEventFilter<SwapEvent>;
 
 export interface Arbitrage extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -245,14 +261,6 @@ export interface Arbitrage extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    apeCall(
-      sender: PromiseOrValue<string>,
-      amount0: PromiseOrValue<BigNumberish>,
-      amount1: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     approveTokens(
       tokens: PromiseOrValue<string>[],
       router: PromiseOrValue<string>,
@@ -288,19 +296,19 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     withdrawal(
       token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
-
-  apeCall(
-    sender: PromiseOrValue<string>,
-    amount0: PromiseOrValue<BigNumberish>,
-    amount1: PromiseOrValue<BigNumberish>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   approveTokens(
     tokens: PromiseOrValue<string>[],
@@ -337,20 +345,20 @@ export interface Arbitrage extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  uniswapV2Call(
+    sender: PromiseOrValue<string>,
+    amount0: PromiseOrValue<BigNumberish>,
+    amount1: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawal(
     token: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    apeCall(
-      sender: PromiseOrValue<string>,
-      amount0: PromiseOrValue<BigNumberish>,
-      amount1: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     approveTokens(
       tokens: PromiseOrValue<string>[],
       router: PromiseOrValue<string>,
@@ -384,6 +392,14 @@ export interface Arbitrage extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     withdrawal(
       token: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -399,17 +415,15 @@ export interface Arbitrage extends BaseContract {
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
+
+    "Quote(uint256[])"(amounts?: null): QuoteEventFilter;
+    Quote(amounts?: null): QuoteEventFilter;
+
+    "Swap(address[],uint256[])"(tokens?: null, amounts?: null): SwapEventFilter;
+    Swap(tokens?: null, amounts?: null): SwapEventFilter;
   };
 
   estimateGas: {
-    apeCall(
-      sender: PromiseOrValue<string>,
-      amount0: PromiseOrValue<BigNumberish>,
-      amount1: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     approveTokens(
       tokens: PromiseOrValue<string>[],
       router: PromiseOrValue<string>,
@@ -445,6 +459,14 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     withdrawal(
       token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -452,14 +474,6 @@ export interface Arbitrage extends BaseContract {
   };
 
   populateTransaction: {
-    apeCall(
-      sender: PromiseOrValue<string>,
-      amount0: PromiseOrValue<BigNumberish>,
-      amount1: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     approveTokens(
       tokens: PromiseOrValue<string>[],
       router: PromiseOrValue<string>,
@@ -493,6 +507,14 @@ export interface Arbitrage extends BaseContract {
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     withdrawal(

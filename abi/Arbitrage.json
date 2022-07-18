@@ -19,32 +19,36 @@
     "type": "event"
   },
   {
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount0",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount1",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "amounts",
+        "type": "uint256[]"
       }
     ],
-    "name": "apeCall",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
+    "name": "Quote",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "tokens",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "amounts",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "Swap",
+    "type": "event"
   },
   {
     "inputs": [
@@ -212,16 +216,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "amountToken_b",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amountToken_c",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "amountToPay",
             "type": "uint256"
           },
@@ -259,6 +253,34 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "uniswapV2Call",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {

@@ -1,6 +1,6 @@
 import hre, { ethers } from 'hardhat';
 import { routers, tokens } from '../data/fantom';
-import { IUniswapV2Router02 } from '../typechain-types/interfaces/IUniswapV2Router02';
+import { IUniswapV2Router02 } from '../typechain-types/contracts/interfaces/IUniswapV2Router02';
 
 const func = async () => {
   async function main() {
