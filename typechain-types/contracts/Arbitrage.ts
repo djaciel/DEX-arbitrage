@@ -101,26 +101,34 @@ export declare namespace Arbitrage {
 export interface ArbitrageInterface extends utils.Interface {
   functions: {
     "approveTokens(address[],address)": FunctionFragment;
+    "elkCall(address,uint256,uint256,bytes)": FunctionFragment;
     "getAmounts((address,address,address[],address[],address[],uint256))": FunctionFragment;
+    "hook(address,uint256,uint256,bytes)": FunctionFragment;
     "owner()": FunctionFragment;
     "pancakeCall(address,uint256,uint256,bytes)": FunctionFragment;
     "performArbitrage((address,address,address,address,address,address,address[],address[],address[],uint256,uint256,uint256))": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "soulswapCall(address,uint256,uint256,bytes)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "uniswapV2Call(address,uint256,uint256,bytes)": FunctionFragment;
+    "wigoswapCall(address,uint256,uint256,bytes)": FunctionFragment;
     "withdrawal(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "approveTokens"
+      | "elkCall"
       | "getAmounts"
+      | "hook"
       | "owner"
       | "pancakeCall"
       | "performArbitrage"
       | "renounceOwnership"
+      | "soulswapCall"
       | "transferOwnership"
       | "uniswapV2Call"
+      | "wigoswapCall"
       | "withdrawal"
   ): FunctionFragment;
 
@@ -129,8 +137,26 @@ export interface ArbitrageInterface extends utils.Interface {
     values: [PromiseOrValue<string>[], PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "elkCall",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getAmounts",
     values: [Arbitrage.ActionQuoteStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hook",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -151,11 +177,29 @@ export interface ArbitrageInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "soulswapCall",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "uniswapV2Call",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "wigoswapCall",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
@@ -172,7 +216,9 @@ export interface ArbitrageInterface extends utils.Interface {
     functionFragment: "approveTokens",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "elkCall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getAmounts", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "hook", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pancakeCall",
@@ -187,11 +233,19 @@ export interface ArbitrageInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "soulswapCall",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "uniswapV2Call",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "wigoswapCall",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdrawal", data: BytesLike): Result;
@@ -267,10 +321,26 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    elkCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     getAmounts(
       actionQuote: Arbitrage.ActionQuoteStruct,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
+
+    hook(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -291,12 +361,28 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    soulswapCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    wigoswapCall(
       sender: PromiseOrValue<string>,
       amount0: PromiseOrValue<BigNumberish>,
       amount1: PromiseOrValue<BigNumberish>,
@@ -316,10 +402,26 @@ export interface Arbitrage extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  elkCall(
+    sender: PromiseOrValue<string>,
+    amount0: PromiseOrValue<BigNumberish>,
+    amount1: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   getAmounts(
     actionQuote: Arbitrage.ActionQuoteStruct,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
+
+  hook(
+    sender: PromiseOrValue<string>,
+    amount0: PromiseOrValue<BigNumberish>,
+    amount1: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -340,12 +442,28 @@ export interface Arbitrage extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  soulswapCall(
+    sender: PromiseOrValue<string>,
+    amount0: PromiseOrValue<BigNumberish>,
+    amount1: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   transferOwnership(
     newOwner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   uniswapV2Call(
+    sender: PromiseOrValue<string>,
+    amount0: PromiseOrValue<BigNumberish>,
+    amount1: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  wigoswapCall(
     sender: PromiseOrValue<string>,
     amount0: PromiseOrValue<BigNumberish>,
     amount1: PromiseOrValue<BigNumberish>,
@@ -365,10 +483,26 @@ export interface Arbitrage extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    elkCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getAmounts(
       actionQuote: Arbitrage.ActionQuoteStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    hook(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -387,12 +521,28 @@ export interface Arbitrage extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    soulswapCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    wigoswapCall(
       sender: PromiseOrValue<string>,
       amount0: PromiseOrValue<BigNumberish>,
       amount1: PromiseOrValue<BigNumberish>,
@@ -430,9 +580,25 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    elkCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     getAmounts(
       actionQuote: Arbitrage.ActionQuoteStruct,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    hook(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -454,12 +620,28 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    soulswapCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    wigoswapCall(
       sender: PromiseOrValue<string>,
       amount0: PromiseOrValue<BigNumberish>,
       amount1: PromiseOrValue<BigNumberish>,
@@ -480,9 +662,25 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    elkCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     getAmounts(
       actionQuote: Arbitrage.ActionQuoteStruct,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    hook(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -504,12 +702,28 @@ export interface Arbitrage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    soulswapCall(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     uniswapV2Call(
+      sender: PromiseOrValue<string>,
+      amount0: PromiseOrValue<BigNumberish>,
+      amount1: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    wigoswapCall(
       sender: PromiseOrValue<string>,
       amount0: PromiseOrValue<BigNumberish>,
       amount1: PromiseOrValue<BigNumberish>,
