@@ -15,7 +15,7 @@ const func = async () => {
 
     while (forever) {
       // ['WFTM-spookyswap', 'USDC-spookyswap', 'TSHARE-tombswap', 'WFTM-spookyswap']
-      for (let i = 0; i < 350; i++) {
+      for (let i = 350; i < 700; i++) {
         const path = paths[i];
         const token_a = tokens[path[0].split('-')[0]].address;
         const tokenDecimals_a = tokens[path[0].split('-')[0]].decimals;

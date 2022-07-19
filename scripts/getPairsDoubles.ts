@@ -1,8 +1,6 @@
 import hre from 'hardhat';
 import { pairsData } from '../data/fantom';
 
-const pairs = pairsData.map((x) => x.pair);
-
 function extractUniqueElements(arr: any) {
   let res: any = [];
   for (const elem of arr) {
@@ -18,7 +16,7 @@ function removeDuplicates(arr: any) {
 function findChilds(parent: any, arr: any) {
   const childs = [];
   for (const elem of arr) {
-    const index = elem.findIndex((x: any) => x.split('-')[0] === parent.split('-')[0]);
+    const index = elem.findIndex((x: any) => x === parent);
     if (index >= 0) {
       childs.push(elem[index === 0 ? 1 : 0]);
     }
@@ -35,13 +33,10 @@ function findAllChilds(arr: any) {
   return allChilds;
 }
 
-function pairExists(a: any, b: any) {
-  return pairs.some((r: any) => r.includes(a) && r.includes(b));
-}
-
 function buildTree(arr: any) {
   const elements = extractUniqueElements(arr);
   const allChilds = findAllChilds(arr);
+  console.log(allChilds)
 
   const result = [];
 
@@ -52,32 +47,14 @@ function buildTree(arr: any) {
       if (element1.split('-')[1] !== element0.split('-')[1]) {
         continue;
       }
-      if (!pairExists(element0, element1)) {
-        continue;
-      }
       for (const element2 of level2) {
-        if (element2.split('-')[0] === element0.split('-')[0]) {
+        if (element2.split('-')[0] !== element0.split('-')[0]) {
           continue;
         }
-        if (element2.split('-')[1] === element1.split('-')[1]) {
+        if (element2.split('-')[1] === element0.split('-')[1]) {
           continue;
         }
-        if (!pairExists(`${element1.split('-')[0]}-${element2.split('-')[1]}`, element2)) {
-          continue;
-        }
-        const level3 = allChilds[element2];
-        for (const element3 of level3) {
-          if (element3.split('-')[0] !== element0.split('-')[0]) {
-            continue;
-          }
-          if (element3.split('-')[1] !== element0.split('-')[1]) {
-            continue;
-          }
-          if (!pairExists(`${element2.split('-')[0]}-${element0.split('-')[1]}`, element0)) {
-            continue;
-          }
-          result.push([element0, element1, element2, element3]);
-        }
+        result.push([element0, element1, element2]);
       }
     }
   }
@@ -89,9 +66,11 @@ const func = async () => {
   async function main() {
     await hre.run('compile');
 
+    const pairs = pairsData.map((x) => x.pair);
+
     const paths = buildTree(pairs);
 
-    console.log('paths', JSON.stringify(paths));
+    //console.log('paths', JSON.stringify(paths));
 
     console.log(`Done!`);
 

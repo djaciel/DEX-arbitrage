@@ -71,6 +71,46 @@ contract Arbitrage is Ownable {
         performSwap(data);
     }
 
+    function hook(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external payable {
+        assert(amount0 == 0 || amount1 == 0);
+        performSwap(data);
+    }
+
+    function wigoswapCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external payable {
+        assert(amount0 == 0 || amount1 == 0);
+        performSwap(data);
+    }
+
+    function soulswapCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external payable {
+        assert(amount0 == 0 || amount1 == 0);
+        performSwap(data);
+    }
+
+    function elkCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external payable {
+        assert(amount0 == 0 || amount1 == 0);
+        performSwap(data);
+    }
+
     function performSwap(bytes calldata data) internal returns (uint256) {
         Action memory action = abi.decode(data, (Action));
 

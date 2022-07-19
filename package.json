@@ -30,7 +30,11 @@
     "getPairsPaths": "hardhat run scripts/getPairsPaths.ts --network",
     "getTokensAddress": "hardhat run scripts/getTokensAddress.ts --network",
     "performArbitrage": "hardhat run scripts/performArbitrage.ts --network",
-    "exampleScript": "hardhat run scripts/exampleScript.ts --network"
+    "performArbitrage2": "hardhat run scripts/performArbitrage2.ts --network",
+    "performArbitrage3": "hardhat run scripts/performArbitrage3.ts --network",
+    "performArbitrage4": "hardhat run scripts/performArbitrage4.ts --network",
+    "exampleScript": "hardhat run scripts/exampleScript.ts --network",
+    "getPairsDoubles": "hardhat run scripts/getPairsDoubles.ts --network"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",
@@ -44,6 +48,7 @@
     "@types/node": "^18.0.1",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
+    "bignumber.js": "^9.0.2",
     "chai": "^4.3.6",
     "dotenv": "^16.0.1",
     "eslint": "^8.19.0",
