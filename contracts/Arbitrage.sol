@@ -41,13 +41,17 @@ contract Arbitrage is Ownable {
     }
 
     function performArbitrage(Action calldata _action) external {
-        address token0 = _action.pair.token0();
-        bytes memory action = abi.encode(_action);
-
-        if (token0 == _action.token_a) {
-            _action.pair.swap(_action.amountToken_a, 0, address(this), action);
+        if (IERC20(_action.token_a).balanceOf(address(this)) > _action.amountToken_a) {
+            performSwap(_action);
         } else {
-            _action.pair.swap(0, _action.amountToken_a, address(this), action);
+            address token0 = _action.pair.token0();
+            bytes memory action = abi.encode(_action);
+
+            if (token0 == _action.token_a) {
+                _action.pair.swap(_action.amountToken_a, 0, address(this), action);
+            } else {
+                _action.pair.swap(0, _action.amountToken_a, address(this), action);
+            }
         }
     }
 
@@ -57,8 +61,7 @@ contract Arbitrage is Ownable {
         uint256 amount1,
         bytes calldata data
     ) external payable {
-        assert(amount0 == 0 || amount1 == 0);
-        performSwap(data);
+        afterCall(amount0, amount1, data);
     }
 
     function pancakeCall(
@@ -67,8 +70,7 @@ contract Arbitrage is Ownable {
         uint256 amount1,
         bytes calldata data
     ) external payable {
-        assert(amount0 == 0 || amount1 == 0);
-        performSwap(data);
+        afterCall(amount0, amount1, data);
     }
 
     function hook(
@@ -77,8 +79,7 @@ contract Arbitrage is Ownable {
         uint256 amount1,
         bytes calldata data
     ) external payable {
-        assert(amount0 == 0 || amount1 == 0);
-        performSwap(data);
+        afterCall(amount0, amount1, data);
     }
 
     function wigoswapCall(
@@ -87,8 +88,7 @@ contract Arbitrage is Ownable {
         uint256 amount1,
         bytes calldata data
     ) external payable {
-        assert(amount0 == 0 || amount1 == 0);
-        performSwap(data);
+        afterCall(amount0, amount1, data);
     }
 
     function soulswapCall(
@@ -97,8 +97,7 @@ contract Arbitrage is Ownable {
         uint256 amount1,
         bytes calldata data
     ) external payable {
-        assert(amount0 == 0 || amount1 == 0);
-        performSwap(data);
+        afterCall(amount0, amount1, data);
     }
 
     function elkCall(
@@ -107,13 +106,22 @@ contract Arbitrage is Ownable {
         uint256 amount1,
         bytes calldata data
     ) external payable {
-        assert(amount0 == 0 || amount1 == 0);
-        performSwap(data);
+        afterCall(amount0, amount1, data);
     }
 
-    function performSwap(bytes calldata data) internal returns (uint256) {
+    function afterCall(
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) internal {
+        assert(amount0 == 0 || amount1 == 0);
         Action memory action = abi.decode(data, (Action));
+        uint256 swapResponse = performSwap(action);
+        require(swapResponse > action.amountToPay, "not enough");
+        IERC20(action.token_a).transfer(msg.sender, action.amountToPay);
+    }
 
+    function performSwap(Action memory action) internal returns (uint256) {
         ActionQuote memory actionQuote = ActionQuote(
             action.router_a,
             action.router_b,
@@ -154,10 +162,6 @@ contract Arbitrage is Ownable {
         );
 
         emit Swap(action.path_c, swapResponse);
-
-        require(swapResponse[1] > action.amountToPay, "not enough");
-
-        IERC20(action.token_a).transfer(msg.sender, action.amountToPay);
 
         return swapResponse[1];
     }

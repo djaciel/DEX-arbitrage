@@ -26,8 +26,8 @@ const func = async () => {
     if ((await tokenContract.balanceOf(arbitrageContract.address)).isZero()) {
       await tokenContract.connect(richSigner).transfer(arbitrageContract.address, '100000000');
       const tokensArr = [tokens['USDC'].address, tokens['WFTM'].address, tokens['DAI'].address];
-      await arbitrage.approveTokens(tokensArr, routers['spookyswap']);
-      await arbitrage.approveTokens(tokensArr, routers['protofi']);
+      await arbitrage.approveTokens([tokens['USDC'].address,tokens['DAI'].address], routers['spookyswap']);
+      await arbitrage.approveTokens([tokens['WFTM'].address], routers['protofi']);
       console.log('tokens sent');
       return;
     }

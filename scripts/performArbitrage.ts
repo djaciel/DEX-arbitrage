@@ -3,6 +3,8 @@ import { pairsData, paths, routers, tokens } from '../data/fantom';
 import { Arbitrage } from '../typechain-types/contracts/Arbitrage';
 import { IUniswapV2Router02 } from '../typechain-types/contracts/interfaces/IUniswapV2Router02';
 import BigNumber from 'bignumber.js';
+import { IERC20 } from '../typechain-types/contracts/interfaces/IERC20';
+import path from 'path';
 
 const func = async () => {
   async function main() {
@@ -10,7 +12,7 @@ const func = async () => {
 
     const arbitrageContract = await deployments.get('Arbitrage');
     const usdcAddress = tokens['USDC'].address;
-    const amount = '100000';
+    const amount = '1000000';
     const forever = true;
 
     while (forever) {
@@ -62,7 +64,9 @@ const func = async () => {
         try {
           const arbitrage = (await ethers.getContractAt(arbitrageContract.abi, arbitrageContract.address)) as Arbitrage;
           const values = await arbitrage.getAmounts(actionQuote);
+          const token = (await ethers.getContractAt('IERC20', token_a)) as IERC20;
 
+          const amountInWallet = await token.balanceOf(arbitrageContract.address);
           const amountToAskBN = new BigNumber(amountToAsk.toString()).multipliedBy(1.003);
           const amountToPay = ethers.BigNumber.from(amountToAskBN.toFixed(tokenDecimals_a).toString().split('.')[0]);
 
@@ -74,7 +78,7 @@ const func = async () => {
           ${values[0].toString()} - ${values[1].toString()} - ${values[2].toString()}
           `);
 
-            if (!values[2].gt(amountToPay)) {
+            if (!values[2].gt(amountToPay) && !amountInWallet.gt(values[2])) {
               console.log('not enough :(');
               continue;
             }
@@ -100,10 +104,38 @@ const func = async () => {
                 amountToPay: amountToPay,
                 deadline: 1720506758,
               };
+              console.log('approving tokens');
+              const tokenContractA = (await ethers.getContractAt('IERC20', token_a)) as IERC20;
+              const tokenContractB = (await ethers.getContractAt('IERC20', token_b)) as IERC20;
+              const tokenContractC = (await ethers.getContractAt('IERC20', token_c)) as IERC20;
+              const allowanceARA = await tokenContractA.allowance(arbitrageContract.address, router_a);
+              const allowanceARB = await tokenContractA.allowance(arbitrageContract.address, router_b);
+              const allowanceBRA = await tokenContractB.allowance(arbitrageContract.address, router_a);
+              const allowanceBRB = await tokenContractB.allowance(arbitrageContract.address, router_b);
+              const allowanceCRA = await tokenContractC.allowance(arbitrageContract.address, router_a);
+              const allowanceCRB = await tokenContractC.allowance(arbitrageContract.address, router_b);
+              if (allowanceARA.isZero()) {
+                await arbitrage.approveTokens([token_a], router_a);
+              }
+              if (allowanceARB.isZero()) {
+                await arbitrage.approveTokens([token_a], router_b);
+              }
+              if (allowanceBRA.isZero()) {
+                await arbitrage.approveTokens([token_b], router_a);
+              }
+              if (allowanceBRB.isZero()) {
+                await arbitrage.approveTokens([token_b], router_b);
+              }
+              if (allowanceCRA.isZero()) {
+                await arbitrage.approveTokens([token_c], router_a);
+              }
+              if (allowanceCRB.isZero()) {
+                await arbitrage.approveTokens([token_c], router_b);
+              }
               console.log('action', action);
-              await arbitrage.performArbitrage(action);
+              await arbitrage.performArbitrage(action, {gasPrice: ethers.utils.parseUnits('10', 'gwei')});
             } catch (error) {
-              console.log('no se pudo');
+              console.log('no se pudo. ', JSON.stringify(error));
               continue;
             }
           } else {
