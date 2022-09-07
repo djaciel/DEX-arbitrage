@@ -133,7 +133,7 @@ const func = async () => {
                 await arbitrage.approveTokens([token_c], router_b);
               }
               console.log('action', action);
-              await arbitrage.performArbitrage(action, {gasPrice: ethers.utils.parseUnits('10', 'gwei')});
+              await arbitrage.performArbitrage(action, {gasPrice: ethers.utils.parseUnits('5', 'gwei')});
             } catch (error) {
               console.log('no se pudo. ', JSON.stringify(error));
               continue;
