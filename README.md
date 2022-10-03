@@ -1,6 +1,6 @@
 # DEX Arbitrage
 
-This project was created for academic purposes. It is far from being profitable
+This project was created for academic purposes. It is far from being profitable.
 
 1. Get pairs list from dexscreener
   - Use inspect and grab the pair addresses from the html code
